@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DEBT DESTROYER</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background: #0a0a0a;
+            color: #ffffff;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3 {
+            font-family: Impact, sans-serif;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            padding: 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 20px rgba(220, 38, 38, 0.4);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            color: #fff;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.6);
+        }
+
+        .container {
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .advice-card {
+            background: linear-gradient(135deg, #ffa502 0%, #ff6348 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            color: white;
+            box-shadow: 0 4px 15px rgba(255, 165, 2, 0.4);
+        }
+
+        .advice-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            margin-bottom: 10px;
+            opacity: 0.9;
+            font-weight: bold;
+        }
+
+        .advice-text {
+            font-size: 17px;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+
+        .stat-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 18px;
+            text-align: center;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .stat-label {
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .stat-value {
+            font-size: 26px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        .stat-value.red { color: #ff4757; }
+        .stat-value.green { color: #2ed573; }
+        .stat-value.orange { color: #ffa502; }
+
+        .card {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #2a2a2a;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+
+        .card-header {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 15px;
+            color: #ff4757;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        .loan-card {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #ff4757;
+            position: relative;
+        }
+
+        .loan-card.eliminated {
+            border-left-color: #2ed573;
+            opacity: 0.6;
+        }
+
+        .loan-card.high-rate { border-left-color: #dc2626; }
+        .loan-card.medium-rate { border-left-color: #ffa502; }
+        .loan-card.low-rate { border-left-color: #2ed573; }
+
+        .loan-name {
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 6px;
+            color: #fff;
+        }
+
+        .loan-details {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 4px;
+        }
+
+        .loan-balance {
+            font-size: 20px;
+            font-weight: bold;
+            color: #fff;
+            margin-top: 8px;
+        }
+
+        .rate-badge {
+            display: inline-block;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .rate-badge.high { background: #dc2626; color: white; }
+        .rate-badge.medium { background: #ffa502; color: white; }
+        .rate-badge.low { background: #2ed573; color: white; }
+
+        .eliminated-badge {
+            background: #2ed573;
+            color: white;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .payment-card {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 12px;
+            border-left: 4px solid #2ed573;
+        }
+
+        .payment-amount {
+            font-size: 20px;
+            font-weight: bold;
+            color: #2ed573;
+        }
+
+        .payment-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .payment-target {
+            font-size: 14px;
+            color: #fff;
+            margin-top: 6px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .form-input {
+            width: 100%;
+            background: #2a2a2a;
+            border: 1px solid #3a3a3a;
+            border-radius: 8px;
+            padding: 14px;
+            color: #fff;
+            font-size: 16px;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #ff4757;
+        }
+
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23999' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 40px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px;
+            border-radius: 10px;
+            border: none;
+            font-size: 15px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #dc2626 0%, #991b1b 100%);
+            color: white;
+            box-shadow: 0 4px 15px rgba(220, 38, 38, 0.4);
+        }
+
+        .btn-primary:active {
+            transform: scale(0.98);
+        }
+
+        .btn-secondary {
+            background: #2a2a2a;
+            color: white;
+            margin-top: 10px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #2a2a2a;
+            border-radius: 5px;
+            overflow: hidden;
+            margin: 15px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #2ed573 0%, #1eb859 100%);
+            transition: width 0.5s ease;
+        }
+
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #1a1a1a;
+            display: flex;
+            justify-content: space-around;
+            padding: 12px 0 8px 0;
+            border-top: 1px solid #2a2a2a;
+            z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+        }
+
+        .nav-item {
+            flex: 1;
+            text-align: center;
+            padding: 8px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: #ff4757;
+        }
+
+        .nav-icon {
+            font-size: 24px;
+            margin-bottom: 4px;
+        }
+
+        .nav-label {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .calc-result {
+            background: #2a2a2a;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 20px;
+            border: 2px solid #2ed573;
+        }
+
+        .calc-result h3 {
+            color: #2ed573;
+            margin-bottom: 15px;
+            font-size: 16px;
+        }
+
+        .calc-stat {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            font-size: 14px;
+        }
+
+        .calc-stat-label {
+            color: #999;
+        }
+
+        .calc-stat-value {
+            color: #2ed573;
+            font-weight: bold;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state-icon {
+            font-size: 60px;
+            margin-bottom: 15px;
+        }
+
+        .empty-state-text {
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚔️ DEBT DESTROYER ⚔️</h1>
+    </div>
+
+    <!-- Dashboard Tab -->
+    <div id="dashboard-tab" class="tab-content active">
+        <div class="container">
+            <div class="advice-card">
+                <div class="advice-title">🔥 TODAY'S REALITY CHECK</div>
+                <div class="advice-text" id="advice-text">Loading...</div>
+            </div>
+
+            <div class="stat-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Debt</div>
+                    <div class="stat-value red" id="total-debt">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Accumulated Interest</div>
+                    <div class="stat-value orange" id="total-interest">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Paid</div>
+                    <div class="stat-value green" id="total-paid">$0</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Daily Interest</div>
+                    <div class="stat-value" id="daily-interest">$0</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">🎯 YOUR BATTLE PLAN</div>
+                <div id="loans-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payments Tab -->
+    <div id="payments-tab" class="tab-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">💰 LOG PAYMENT</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Target Loan</label>
+                    <select class="form-input" id="payment-loan">
+                        <option value="">Select loan...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Payment Amount ($)</label>
+                    <input type="number" class="form-input" id="payment-amount" placeholder="0">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Payment Type</label>
+                    <select class="form-input" id="payment-type">
+                        <option value="interest">Accumulated Interest</option>
+                        <option value="principal">Principal</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="logPayment()">RECORD STRIKE</button>
+            </div>
+
+            <div class="card">
+                <div class="card-header">📊 PAYMENT HISTORY</div>
+                <div id="payments-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator Tab -->
+    <div id="calculator-tab" class="tab-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">🧮 PAYOFF CALCULATOR</div>
+                
+                <div class="form-group">
+                    <label class="form-label">Extra Monthly Payment</label>
+                    <input type="number" class="form-input" id="extra-payment" placeholder="0" value="3000">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Strategy</label>
+                    <select class="form-input" id="calc-strategy">
+                        <option value="avalanche">Avalanche (Highest Rate First)</option>
+                        <option value="snowball">Snowball (Lowest Balance First)</option>
+                    </select>
+                </div>
+
+                <button class="btn btn-primary" onclick="calculatePayoff()">CALCULATE FREEDOM</button>
+
+                <div id="calc-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('dashboard')">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">Dashboard</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('payments')">
+            <div class="nav-icon">💰</div>
+            <div class="nav-label">Payments</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('calculator')">
+            <div class="nav-icon">🧮</div>
+            <div class="nav-label">Calculator</div>
+        </div>
+    </div>
+
+    <script>
+        // YOUR ACTUAL LOAN DATA (as of 02/20/2026)
+        let loans = [
+            {
+                id: 'AA',
+                name: 'Group AA (Grad PLUS)',
+                principal: 36332,
+                accruedInterest: 1455.03,
+                rate: 7.54,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AC',
+                name: 'Group AC (Subsidized)',
+                principal: 1758.82,
+                accruedInterest: 0,
+                rate: 3.76,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AE',
+                name: 'Group AE (Unsubsidized)',
+                principal: 25730,
+                accruedInterest: 0,
+                rate: 6.54,
+                servicer: 'MOHELA',
+                status: 'eliminated'
+            },
+            {
+                id: 'AF',
+                name: 'Group AF (Grad PLUS)',
+                principal: 28168,
+                accruedInterest: 2762.40,
+                rate: 8.05,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AG',
+                name: 'Group AG (Unsubsidized)',
+                principal: 33000,
+                accruedInterest: 3245.36,
+                rate: 7.05,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AH',
+                name: 'Group AH (Grad PLUS)',
+                principal: 38045,
+                accruedInterest: 261.49,
+                rate: 9.08,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AI',
+                name: 'Group AI (Unsubsidized)',
+                principal: 34389,
+                accruedInterest: 212.70,
+                rate: 8.08,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AJ',
+                name: 'Group AJ (Grad PLUS)',
+                principal: 27070,
+                accruedInterest: 336.09,
+                rate: 8.94,
+                servicer: 'MOHELA',
+                status: 'active'
+            },
+            {
+                id: 'AK',
+                name: 'Group AK (Unsubsidized)',
+                principal: 17195,
+                accruedInterest: 904.57,
+                rate: 7.94,
+                servicer: 'MOHELA',
+                status: 'active'
+            }
+        ];
+
+        let payments = [
+            {
+                date: '2025-06-25',
+                amount: 2000,
+                loanId: 'CREDIT_CARD',
+                type: 'full',
+                description: 'Credit card eliminated'
+            },
+            {
+                date: '2025-07-24',
+                amount: 2000,
+                loanId: 'AA',
+                type: 'interest',
+                description: 'First strategic strike on Group AA'
+            },
+            {
+                date: '2025-09-02',
+                amount: 1000,
+                loanId: 'AH',
+                type: 'interest',
+                description: 'Attack on highest rate (9.08%)'
+            },
+            {
+                date: '2025-09-30',
+                amount: 2350,
+                loanId: 'AF',
+                type: 'interest',
+                description: 'Major strike on Group AF'
+            },
+            {
+                date: '2026-02-23',
+                amount: 4160.20,
+                loanId: 'AE',
+                type: 'full',
+                description: 'GROUP AE ELIMINATED! 🎉'
+            }
+        ];
+
+        // Save to localStorage
+        function saveData() {
+            localStorage.setItem('debtLoans', JSON.stringify(loans));
+            localStorage.setItem('debtPayments', JSON.stringify(payments));
+        }
+
+        // Load from localStorage
+        function loadData() {
+            const savedLoans = localStorage.getItem('debtLoans');
+            const savedPayments = localStorage.getItem('debtPayments');
+            
+            if (savedLoans) loans = JSON.parse(savedLoans);
+            if (savedPayments) payments = JSON.parse(savedPayments);
+        }
+
+        // Render dashboard
+        function renderDashboard() {
+            const totalDebt = loans.reduce((sum, l) => sum + l.principal + l.accruedInterest, 0);
+            const totalInterest = loans.filter(l => l.status === 'active').reduce((sum, l) => sum + l.accruedInterest, 0);
+            const totalPaid = payments.reduce((sum, p) => sum + p.amount, 0);
+            const dailyInterest = loans.filter(l => l.status === 'active').reduce((sum, l) => 
+                sum + ((l.principal + l.accruedInterest) * (l.rate / 100) / 365), 0
+            );
+
+            document.getElementById('total-debt').textContent = '$' + Math.round(totalDebt).toLocaleString();
+            document.getElementById('total-interest').textContent = '$' + Math.round(totalInterest).toLocaleString();
+            document.getElementById('total-paid').textContent = '$' + Math.round(totalPaid).toLocaleString();
+            document.getElementById('daily-interest').textContent = '$' + Math.round(dailyInterest);
+
+            // Render advice
+            renderAdvice(totalDebt, totalInterest, totalPaid);
+
+            // Render loans
+            const loansList = document.getElementById('loans-list');
+            const sortedLoans = [...loans].sort((a, b) => b.accruedInterest - a.accruedInterest);
+            
+            loansList.innerHTML = sortedLoans.map(loan => {
+                const total = loan.principal + loan.accruedInterest;
+                const rateClass = loan.rate >= 8 ? 'high-rate' : loan.rate >= 6 ? 'medium-rate' : 'low-rate';
+                const rateBadge = loan.rate >= 8 ? 'high' : loan.rate >= 6 ? 'medium' : 'low';
+                const eliminated = loan.status === 'eliminated' ? 'eliminated' : '';
+                
+                return `
+                    <div class="loan-card ${rateClass} ${eliminated}">
+                        <div class="loan-name">
+                            ${loan.name}
+                            <span class="rate-badge ${rateBadge}">${loan.rate}%</span>
+                            ${loan.status === 'eliminated' ? '<span class="eliminated-badge">✅ ELIMINATED</span>' : ''}
+                        </div>
+                        <div class="loan-details">${loan.servicer}</div>
+                        <div class="loan-details">Principal: $${loan.principal.toLocaleString()}</div>
+                        <div class="loan-details">Accumulated Interest: $${Math.round(loan.accruedInterest).toLocaleString()}</div>
+                        <div class="loan-balance">Total: $${Math.round(total).toLocaleString()}</div>
+                    </div>
+                `;
+            }).join('');
+
+            // Populate payment dropdown
+            const paymentSelect = document.getElementById('payment-loan');
+            paymentSelect.innerHTML = '<option value="">Select loan...</option>' +
+                loans.filter(l => l.status === 'active').map(l => 
+                    `<option value="${l.id}">${l.name}</option>`
+                ).join('');
+        }
+
+        // Render advice
+        function renderAdvice(totalDebt, totalInterest, totalPaid) {
+            const adviceList = [
+                `You've destroyed $${Math.round(totalPaid).toLocaleString()} in debt. Your classmates are still partying. Keep grinding.`,
+                `$${Math.round(totalInterest).toLocaleString()} in accumulated interest is bleeding you dry. Attack Group AG next.`,
+                `You eliminated Group AE. Proof you can do this. Group AG ($3,245) is next.`,
+                `Every day you wait costs you $64 in interest. Execute the plan.`,
+                `You're paying $${Math.round(totalDebt * 0.07 / 12).toLocaleString()}/month just for existing in debt. Kill it.`,
+                `Group AH at 9.08% is your most expensive loan. After AG, that's your target.`,
+                `$11,510 paid so far. You're building momentum. Don't stop now.`,
+                `Your future pharmacist self is watching. Make them proud.`,
+                `Interest doesn't sleep. Neither should your debt attacks.`,
+                `You've got $${Math.round(totalInterest).toLocaleString()} left to eliminate. Get after it.`
+            ];
+
+            const advice = adviceList[Math.floor(Math.random() * adviceList.length)];
+            document.getElementById('advice-text').textContent = advice;
+        }
+
+        // Render payments
+        function renderPayments() {
+            const paymentsList = document.getElementById('payments-list');
+            
+            if (payments.length === 0) {
+                paymentsList.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-text">No payments logged yet</div></div>';
+                return;
+            }
+
+            paymentsList.innerHTML = [...payments].reverse().map(p => {
+                const loan = loans.find(l => l.id === p.loanId);
+                const loanName = loan ? loan.name : p.loanId;
+                
+                return `
+                    <div class="payment-card">
+                        <div class="payment-amount">$${p.amount.toLocaleString()}</div>
+                        <div class="payment-target">${loanName}</div>
+                        <div class="payment-date">${p.date} • ${p.type}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Log payment
+        function logPayment() {
+            const loanId = document.getElementById('payment-loan').value;
+            const amount = parseFloat(document.getElementById('payment-amount').value);
+            const type = document.getElementById('payment-type').value;
+
+            if (!loanId || !amount || amount <= 0) {
+                alert('Select a loan and enter a valid amount');
+                return;
+            }
+
+            const loan = loans.find(l => l.id === loanId);
+            const payment = {
+                date: new Date().toISOString().split('T')[0],
+                amount: amount,
+                loanId: loanId,
+                type: type,
+                description: `${type} payment to ${loan.name}`
+            };
+
+            payments.push(payment);
+
+            // Update loan
+            if (type === 'interest') {
+                loan.accruedInterest = Math.max(0, loan.accruedInterest - amount);
+                if (loan.accruedInterest === 0) {
+                    alert('🎉 INTEREST ELIMINATED! Moving to next target!');
+                }
+            } else {
+                loan.principal = Math.max(0, loan.principal - amount);
+                if (loan.principal === 0 && loan.accruedInterest === 0) {
+                    loan.status = 'eliminated';
+                    alert('🏆 LOAN COMPLETELY DESTROYED! You\'re a BEAST!');
+                }
+            }
+
+            saveData();
+            renderDashboard();
+            renderPayments();
+
+            // Clear form
+            document.getElementById('payment-amount').value = '';
+            
+            alert(`✅ $${amount.toLocaleString()} payment logged!`);
+        }
+
+        // Calculate payoff
+        function calculatePayoff() {
+            const extraPayment = parseFloat(document.getElementById('extra-payment').value) || 0;
+            const strategy = document.getElementById('calc-strategy').value;
+
+            if (extraPayment <= 0) {
+                alert('Enter an extra payment amount');
+                return;
+            }
+
+            // Sort loans by strategy
+            const activeLoans = loans.filter(l => l.status === 'active');
+            const sortedLoans = strategy === 'avalanche' ?
+                [...activeLoans].sort((a, b) => b.rate - a.rate) :
+                [...activeLoans].sort((a, b) => (a.principal + a.accruedInterest) - (b.principal + b.accruedInterest));
+
+            // Simulate minimum payments
+            const minResult = simulatePayoff(activeLoans, 0);
+            
+            // Simulate with extra payment
+            const extraResult = simulatePayoff(sortedLoans, extraPayment);
+
+            const monthsSaved = minResult.months - extraResult.months;
+            const interestSaved = minResult.totalInterest - extraResult.totalInterest;
+
+            const resultsDiv = document.getElementById('calc-results');
+            resultsDiv.innerHTML = `
+                <div class="calc-result">
+                    <h3>💪 ${strategy.toUpperCase()} RESULTS</h3>
+                    <div class="calc-stat">
+                        <span class="calc-stat-label">Months Saved:</span>
+                        <span class="calc-stat-value">${monthsSaved} months</span>
+                    </div>
+                    <div class="calc-stat">
+                        <span class="calc-stat-label">Interest Saved:</span>
+                        <span class="calc-stat-value">$${Math.round(interestSaved).toLocaleString()}</span>
+                    </div>
+                    <div class="calc-stat">
+                        <span class="calc-stat-label">New Payoff Date:</span>
+                        <span class="calc-stat-value">${new Date(Date.now() + extraResult.months * 30 * 24 * 60 * 60 * 1000).toLocaleDateString('en-US', {month: 'short', year: 'numeric'})}</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.min(100, (monthsSaved / minResult.months) * 100)}%"></div>
+                    </div>
+                    <div style="margin-top: 10px; text-align: center; color: #2ed573; font-size: 13px;">
+                        ${Math.round((monthsSaved / minResult.months) * 100)}% faster payoff with $${extraPayment}/month extra
+                    </div>
+                </div>
+            `;
+        }
+
+        // Simulate payoff
+        function simulatePayoff(loansList, extraPayment) {
+            let workingLoans = loansList.map(l => ({
+                ...l,
+                remaining: l.principal + l.accruedInterest
+            }));
+            
+            let months = 0;
+            let totalInterest = 0;
+            const avgMinimum = 200; // Rough estimate per loan
+            const totalPayment = (workingLoans.length * avgMinimum) + extraPayment;
+
+            while (workingLoans.some(l => l.remaining > 0) && months < 360) {
+                // Add interest
+                workingLoans.forEach(loan => {
+                    if (loan.remaining > 0) {
+                        const monthlyInterest = loan.remaining * (loan.rate / 100 / 12);
+                        loan.remaining += monthlyInterest;
+                        totalInterest += monthlyInterest;
+                    }
+                });
+
+                // Apply payments
+                let remainingPayment = totalPayment;
+                
+                // Minimum to all loans
+                workingLoans.forEach(loan => {
+                    if (loan.remaining > 0 && remainingPayment > 0) {
+                        const payment = Math.min(avgMinimum, loan.remaining, remainingPayment);
+                        loan.remaining -= payment;
+                        remainingPayment -= payment;
+                    }
+                });
+
+                // Extra to first loan
+                if (remainingPayment > 0) {
+                    const targetLoan = workingLoans.find(l => l.remaining > 0);
+                    if (targetLoan) {
+                        const payment = Math.min(remainingPayment, targetLoan.remaining);
+                        targetLoan.remaining -= payment;
+                    }
+                }
+
+                months++;
+            }
+
+            return { months, totalInterest };
+        }
+
+        // Tab switching
+        function switchTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab + '-tab').classList.add('active');
+
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+
+            if (tab === 'payments') {
+                renderPayments();
+            }
+        }
+
+        // Initialize
+        loadData();
+        renderDashboard();
+    </script>
+</body>
+</html>
