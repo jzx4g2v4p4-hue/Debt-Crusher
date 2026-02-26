@@ -1,0 +1,861 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <title>DEBT DESTROYER</title>
+    <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;800;900&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --red: #e63946;
+            --red-dark: #9b1d24;
+            --orange: #f4a261;
+            --yellow: #ffd166;
+            --green: #2dc653;
+            --green-dark: #1a9c3a;
+            --blue: #4cc9f0;
+            --purple: #9b72cf;
+            --bg: #0d0d0f;
+            --surface: #16161a;
+            --surface2: #1e1e24;
+            --surface3: #252530;
+            --border: #2a2a32;
+            --text: #f0f0f4;
+            --muted: #7a7a8a;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+        body {
+            background: var(--bg);
+            color: var(--text);
+            font-family: 'Barlow', sans-serif;
+            padding-bottom: 80px;
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+            pointer-events: none;
+            z-index: 9999;
+            opacity: 0.4;
+        }
+
+        h1, h2, h3 { font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: 3px; }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 2px solid var(--red);
+            padding: 16px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 4px 30px rgba(230, 57, 70, 0.2);
+        }
+        .header h1 { font-size: 28px; font-weight: 900; color: var(--text); letter-spacing: 5px; }
+        .header h1 span { color: var(--red); }
+        .header-sub {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 10px; letter-spacing: 3px;
+            color: var(--muted); margin-top: 3px; text-transform: uppercase;
+        }
+
+        .container { padding: 20px; max-width: 600px; margin: 0 auto; }
+
+        .advice-card {
+            background: linear-gradient(135deg, var(--red-dark) 0%, #6b1520 100%);
+            border: 1px solid var(--red); border-radius: 10px;
+            padding: 18px 20px; margin-bottom: 20px;
+            position: relative; overflow: hidden;
+        }
+        .advice-card::before {
+            content: ''; position: absolute;
+            top: -30px; right: -30px;
+            width: 100px; height: 100px;
+            background: rgba(230,57,70,0.15); border-radius: 50%;
+        }
+        .advice-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 11px; text-transform: uppercase; letter-spacing: 3px;
+            margin-bottom: 10px; opacity: 0.8; font-weight: 700; color: var(--orange);
+        }
+        .advice-text { font-size: 15px; font-weight: 600; line-height: 1.55; color: #fff; }
+
+        .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 20px; }
+        .stat-card {
+            background: var(--surface); border-radius: 10px; padding: 16px;
+            text-align: center; border: 1px solid var(--border);
+            position: relative; overflow: hidden;
+        }
+        .stat-card::after { content: ''; position: absolute; bottom: 0; left: 0; right: 0; height: 2px; }
+        .stat-card.red-accent::after    { background: var(--red); }
+        .stat-card.orange-accent::after { background: var(--orange); }
+        .stat-card.green-accent::after  { background: var(--green); }
+        .stat-card.muted-accent::after  { background: var(--muted); }
+        .stat-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 11px; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 8px; font-weight: 600;
+        }
+        .stat-value { font-family: 'Barlow Condensed', sans-serif; font-size: 26px; font-weight: 800; letter-spacing: 1px; }
+        .stat-value.red    { color: var(--red); }
+        .stat-value.green  { color: var(--green); }
+        .stat-value.orange { color: var(--orange); }
+        .stat-value.muted  { color: var(--muted); }
+
+        .card {
+            background: var(--surface); border-radius: 10px;
+            padding: 20px; margin-bottom: 20px; border: 1px solid var(--border);
+        }
+        .card-header {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 14px; font-weight: 800; margin-bottom: 16px;
+            color: var(--red); text-transform: uppercase; letter-spacing: 3px;
+            padding-bottom: 12px; border-bottom: 1px solid var(--border);
+        }
+
+        .loan-card {
+            background: var(--surface2); border-radius: 8px;
+            padding: 14px 16px; margin-bottom: 10px;
+            border-left: 3px solid var(--red); position: relative;
+        }
+        .loan-card.eliminated { border-left-color: var(--green); opacity: 0.55; }
+        .loan-card.high-rate  { border-left-color: #e63946; }
+        .loan-card.medium-rate { border-left-color: var(--orange); }
+        .loan-card.low-rate   { border-left-color: var(--green); }
+
+        .loan-name {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 17px; font-weight: 700; margin-bottom: 5px;
+            color: var(--text); letter-spacing: 0.5px;
+            display: flex; align-items: center; flex-wrap: wrap; gap: 6px;
+        }
+        .loan-details { font-size: 12px; color: var(--muted); margin-bottom: 3px; font-weight: 500; }
+        .loan-balance {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 22px; font-weight: 800; color: var(--text); margin-top: 8px; letter-spacing: 1px;
+        }
+        .loan-daily { font-size: 11px; color: var(--orange); font-weight: 600; margin-top: 4px; }
+
+        .rate-badge {
+            display: inline-block; padding: 2px 7px; border-radius: 3px;
+            font-size: 11px; font-weight: 700;
+            font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px;
+        }
+        .rate-badge.high   { background: rgba(230,57,70,0.2);  color: var(--red);    border: 1px solid rgba(230,57,70,0.3); }
+        .rate-badge.medium { background: rgba(244,162,97,0.15); color: var(--orange); border: 1px solid rgba(244,162,97,0.3); }
+        .rate-badge.low    { background: rgba(45,198,83,0.15);  color: var(--green);  border: 1px solid rgba(45,198,83,0.3); }
+
+        .eliminated-badge {
+            background: rgba(45,198,83,0.15); color: var(--green);
+            border: 1px solid rgba(45,198,83,0.3); padding: 2px 8px;
+            border-radius: 3px; font-size: 11px; font-weight: 700;
+            font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; text-transform: uppercase;
+        }
+        .target-badge {
+            background: rgba(255,209,102,0.15); color: var(--yellow);
+            border: 1px solid rgba(255,209,102,0.4); padding: 2px 8px;
+            border-radius: 3px; font-size: 11px; font-weight: 700;
+            font-family: 'Barlow Condensed', sans-serif; letter-spacing: 1px; text-transform: uppercase;
+        }
+
+        .payment-card {
+            background: var(--surface2); border-radius: 8px;
+            padding: 14px 16px; margin-bottom: 10px; border-left: 3px solid var(--green);
+        }
+        .payment-amount { font-family: 'Barlow Condensed', sans-serif; font-size: 22px; font-weight: 800; color: var(--green); letter-spacing: 1px; }
+        .payment-date   { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+        .payment-target { font-size: 14px; color: var(--text); margin-top: 5px; font-weight: 600; }
+
+        .form-group { margin-bottom: 14px; }
+        .form-label {
+            display: block; font-family: 'Barlow Condensed', sans-serif;
+            font-size: 11px; color: var(--muted);
+            text-transform: uppercase; letter-spacing: 2px; margin-bottom: 7px; font-weight: 600;
+        }
+        .form-input {
+            width: 100%; background: var(--surface2);
+            border: 1px solid var(--border); border-radius: 7px;
+            padding: 13px 14px; color: var(--text);
+            font-size: 15px; font-family: 'Barlow', sans-serif; transition: border-color 0.2s;
+        }
+        .form-input:focus { outline: none; border-color: var(--red); }
+        select.form-input {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%237a7a8a' d='M6 8L0 0h12z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-position: right 14px center;
+            padding-right: 40px; cursor: pointer;
+        }
+        select.form-input option { background: var(--surface2); }
+
+        .btn {
+            width: 100%; padding: 15px; border-radius: 8px; border: none;
+            font-family: 'Barlow Condensed', sans-serif; font-size: 16px;
+            font-weight: 800; text-transform: uppercase; letter-spacing: 3px;
+            cursor: pointer; transition: all 0.15s;
+        }
+        .btn-primary { background: var(--red); color: white; box-shadow: 0 4px 20px rgba(230,57,70,0.3); }
+        .btn-primary:hover  { background: #f04550; }
+        .btn-primary:active { transform: scale(0.98); box-shadow: none; }
+        .btn-secondary { background: var(--surface2); color: var(--text); margin-top: 10px; border: 1px solid var(--border); }
+
+        .progress-bar { width: 100%; height: 6px; background: var(--surface2); border-radius: 3px; overflow: hidden; margin: 15px 0; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, var(--green-dark) 0%, var(--green) 100%); border-radius: 3px; transition: width 0.6s ease; }
+
+        .bottom-nav {
+            position: fixed; bottom: 0; left: 0; right: 0;
+            background: var(--surface); display: flex;
+            justify-content: space-around; padding: 10px 0 8px 0;
+            border-top: 1px solid var(--border); z-index: 1000;
+            box-shadow: 0 -4px 20px rgba(0,0,0,0.4);
+        }
+        .nav-item { flex: 1; text-align: center; padding: 7px 8px; color: var(--muted); cursor: pointer; transition: all 0.2s; }
+        .nav-item.active { color: var(--red); }
+        .nav-icon   { font-size: 22px; margin-bottom: 3px; }
+        .nav-label  { font-family: 'Barlow Condensed', sans-serif; font-size: 10px; text-transform: uppercase; letter-spacing: 1.5px; font-weight: 700; }
+
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+
+        .calc-result {
+            background: var(--surface2); border-radius: 10px;
+            padding: 20px; margin-top: 18px; border: 1px solid rgba(45,198,83,0.3);
+        }
+        .calc-result h3 { font-family: 'Barlow Condensed', sans-serif; color: var(--green); margin-bottom: 16px; font-size: 17px; letter-spacing: 2px; }
+        .calc-stat { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 14px; padding-bottom: 12px; border-bottom: 1px solid var(--border); }
+        .calc-stat:last-of-type { border-bottom: none; }
+        .calc-stat-label { color: var(--muted); font-weight: 500; }
+        .calc-stat-value { color: var(--green); font-weight: 700; font-size: 16px; }
+
+        .empty-state { text-align: center; padding: 40px 20px; color: var(--muted); }
+        .empty-state-icon { font-size: 50px; margin-bottom: 12px; }
+        .empty-state-text { font-size: 14px; font-weight: 500; }
+
+        /* ── STRATEGY ── */
+        .strategy-tabs { display: flex; gap: 8px; margin-bottom: 20px; flex-wrap: wrap; }
+        .strat-tab-btn {
+            flex: 1; min-width: 60px; padding: 10px 6px;
+            background: var(--surface2); border: 1px solid var(--border);
+            border-radius: 7px; color: var(--muted);
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px; font-weight: 700; letter-spacing: 1px;
+            text-transform: uppercase; cursor: pointer; transition: all 0.2s; text-align: center;
+        }
+        .strat-tab-btn.active {
+            background: var(--red); color: white; border-color: var(--red);
+            box-shadow: 0 2px 12px rgba(230,57,70,0.3);
+        }
+        .strategy-panel { display: none; }
+        .strategy-panel.active { display: block; }
+
+        .strategy-card {
+            background: var(--surface2); border-radius: 10px;
+            padding: 18px; margin-bottom: 14px;
+            border: 1px solid var(--border); position: relative; overflow: hidden;
+        }
+        .strategy-card::before { content: ''; position: absolute; top: 0; left: 0; bottom: 0; width: 3px; }
+        .strategy-card.avalanche::before { background: var(--red); }
+        .strategy-card.snowball::before  { background: var(--blue); }
+        .strategy-card.hybrid::before    { background: var(--purple); }
+        .strategy-card.tip::before       { background: var(--yellow); }
+
+        .strategy-card-title {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 15px; font-weight: 800; letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 10px;
+            display: flex; align-items: center; gap: 8px;
+        }
+        .strategy-card.avalanche .strategy-card-title { color: var(--red); }
+        .strategy-card.snowball  .strategy-card-title { color: var(--blue); }
+        .strategy-card.hybrid    .strategy-card-title { color: var(--purple); }
+        .strategy-card.tip       .strategy-card-title { color: var(--yellow); }
+
+        .strategy-card-body { font-size: 14px; color: #ccc; line-height: 1.65; }
+        .strategy-card-body strong { color: var(--text); }
+
+        .attack-order { margin-top: 14px; display: flex; flex-direction: column; gap: 8px; }
+        .attack-step {
+            display: flex; align-items: flex-start; gap: 12px;
+            background: var(--surface3); border-radius: 7px; padding: 12px;
+        }
+        .step-num {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 22px; font-weight: 900; line-height: 1;
+            min-width: 28px; text-align: center;
+        }
+        .step-num.red    { color: var(--red); }
+        .step-num.blue   { color: var(--blue); }
+        .step-num.purple { color: var(--purple); }
+
+        .step-info { flex: 1; }
+        .step-name { font-family: 'Barlow Condensed', sans-serif; font-size: 15px; font-weight: 700; letter-spacing: 0.5px; color: var(--text); margin-bottom: 3px; }
+        .step-detail { font-size: 12px; color: var(--muted); line-height: 1.5; }
+        .step-detail .hl { color: var(--orange); font-weight: 600; }
+
+        .tip-list { list-style: none; margin-top: 10px; }
+        .tip-list li {
+            padding: 10px 0; border-bottom: 1px solid var(--border);
+            font-size: 13px; color: #ccc; line-height: 1.55;
+            display: flex; gap: 10px;
+        }
+        .tip-list li:last-child { border-bottom: none; }
+        .tip-icon { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+
+        .interest-meter { margin-top: 14px; }
+        .meter-section-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 11px; color: var(--muted); letter-spacing: 2px;
+            text-transform: uppercase; margin-bottom: 10px; font-weight: 700;
+        }
+        .meter-row { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .meter-label {
+            font-family: 'Barlow Condensed', sans-serif;
+            font-size: 12px; font-weight: 700; width: 72px;
+            color: var(--muted); letter-spacing: 0.5px; flex-shrink: 0;
+        }
+        .meter-bar-wrap { flex: 1; height: 8px; background: var(--surface3); border-radius: 4px; overflow: hidden; }
+        .meter-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+        .meter-val { font-family: 'Barlow Condensed', sans-serif; font-size: 12px; font-weight: 700; width: 52px; text-align: right; color: var(--orange); }
+
+        .savings-highlight {
+            background: linear-gradient(135deg, rgba(45,198,83,0.12) 0%, rgba(26,156,58,0.08) 100%);
+            border: 1px solid rgba(45,198,83,0.3);
+            border-radius: 8px; padding: 14px; margin-top: 14px; text-align: center;
+        }
+        .savings-highlight .big   { font-family: 'Barlow Condensed', sans-serif; font-size: 32px; font-weight: 900; color: var(--green); letter-spacing: 2px; }
+        .savings-highlight .label { font-size: 12px; color: var(--muted); margin-top: 4px; font-weight: 500; }
+
+        .live-pulse {
+            display: inline-block; width: 7px; height: 7px;
+            background: var(--orange); border-radius: 50%;
+            margin-right: 5px; vertical-align: middle;
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50%       { opacity: 0.4; transform: scale(0.7); }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>⚔️ DEBT <span>DESTROYER</span> ⚔️</h1>
+        <div class="header-sub">Base: 02/24/2026 &nbsp;·&nbsp; <span class="live-pulse"></span>Interest accruing live</div>
+    </div>
+
+    <!-- Dashboard -->
+    <div id="dashboard-tab" class="tab-content active">
+        <div class="container">
+            <div class="advice-card">
+                <div class="advice-title">🔥 TODAY'S REALITY CHECK</div>
+                <div class="advice-text" id="advice-text">Loading...</div>
+            </div>
+            <div class="stat-grid">
+                <div class="stat-card red-accent">
+                    <div class="stat-label">Total Debt</div>
+                    <div class="stat-value red" id="total-debt">$0</div>
+                </div>
+                <div class="stat-card orange-accent">
+                    <div class="stat-label">Accrued Interest</div>
+                    <div class="stat-value orange" id="total-interest">$0</div>
+                </div>
+                <div class="stat-card green-accent">
+                    <div class="stat-label">Total Paid</div>
+                    <div class="stat-value green" id="total-paid">$0</div>
+                </div>
+                <div class="stat-card muted-accent">
+                    <div class="stat-label">Daily Interest</div>
+                    <div class="stat-value muted" id="daily-interest">$0</div>
+                </div>
+            </div>
+            <div class="card">
+                <div class="card-header">🎯 YOUR BATTLE PLAN</div>
+                <div id="loans-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Payments -->
+    <div id="payments-tab" class="tab-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">💰 LOG PAYMENT</div>
+                <div class="form-group">
+                    <label class="form-label">Target Loan</label>
+                    <select class="form-input" id="payment-loan"><option value="">Select loan...</option></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Payment Amount ($)</label>
+                    <input type="number" class="form-input" id="payment-amount" placeholder="0">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Payment Type</label>
+                    <select class="form-input" id="payment-type">
+                        <option value="interest">Accumulated Interest</option>
+                        <option value="principal">Principal</option>
+                        <option value="both">Both (Interest First)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="logPayment()">RECORD STRIKE</button>
+            </div>
+            <div class="card">
+                <div class="card-header">📊 PAYMENT HISTORY</div>
+                <div id="payments-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Calculator -->
+    <div id="calculator-tab" class="tab-content">
+        <div class="container">
+            <div class="card">
+                <div class="card-header">🧮 PAYOFF CALCULATOR</div>
+                <div class="form-group">
+                    <label class="form-label">Extra Monthly Payment ($)</label>
+                    <input type="number" class="form-input" id="extra-payment" placeholder="0" value="3000">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Strategy</label>
+                    <select class="form-input" id="calc-strategy">
+                        <option value="avalanche">Avalanche (Highest Rate First)</option>
+                        <option value="snowball">Snowball (Lowest Balance First)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="calculatePayoff()">CALCULATE FREEDOM</button>
+                <div id="calc-results"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Strategy -->
+    <div id="strategy-tab" class="tab-content">
+        <div class="container">
+            <div class="strategy-tabs">
+                <div class="strat-tab-btn active" onclick="switchStratTab('avalanche',this)">🔥 Avalanche</div>
+                <div class="strat-tab-btn" onclick="switchStratTab('snowball',this)">❄️ Snowball</div>
+                <div class="strat-tab-btn" onclick="switchStratTab('hybrid',this)">⚡ Hybrid</div>
+                <div class="strat-tab-btn" onclick="switchStratTab('tips',this)">💡 Tips</div>
+            </div>
+
+            <div id="strat-avalanche" class="strategy-panel active">
+                <div class="strategy-card avalanche">
+                    <div class="strategy-card-title">🔥 Debt Avalanche</div>
+                    <div class="strategy-card-body">
+                        Pay <strong>minimums on all loans</strong>, then throw every extra dollar at the <strong>highest-rate loan</strong>. Mathematically optimal — saves the most total interest. Best for disciplined borrowers focused on the long game.
+                    </div>
+                    <div class="interest-meter">
+                        <div class="meter-section-label">Daily Interest Cost by Loan</div>
+                        <div id="avalanche-meter"></div>
+                    </div>
+                    <div class="attack-order">
+                        <div class="meter-section-label" style="margin-top:14px">Attack Order</div>
+                        <div id="avalanche-order"></div>
+                    </div>
+                    <div class="savings-highlight" id="avalanche-savings"></div>
+                </div>
+            </div>
+
+            <div id="strat-snowball" class="strategy-panel">
+                <div class="strategy-card snowball">
+                    <div class="strategy-card-title">❄️ Debt Snowball</div>
+                    <div class="strategy-card-body">
+                        Pay <strong>minimums on all loans</strong>, then target the <strong>smallest total balance</strong> first. You'll pay more interest overall, but faster wins build momentum and motivation. Best if you need psychological fuel to keep going.
+                    </div>
+                    <div class="attack-order" style="margin-top:14px">
+                        <div class="meter-section-label">Attack Order (Smallest Balance First)</div>
+                        <div id="snowball-order"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="strat-hybrid" class="strategy-panel">
+                <div class="strategy-card hybrid">
+                    <div class="strategy-card-title">⚡ Hybrid Strategy (Recommended)</div>
+                    <div class="strategy-card-body">
+                        <strong>Your situation calls for a custom plan.</strong> You have one tiny loan (AC, $1,758) you can nuke instantly for a quick win, plus several high-rate loans bleeding you daily. This plan blends psychology + math:
+                        <br><br>
+                        <strong>Phase 1 — Quick Win:</strong> Eliminate Group AC immediately.<br>
+                        <strong>Phase 2 — Stop the Bleeding:</strong> Attack interest on AH &amp; AJ (your highest rates) to halt daily compounding.<br>
+                        <strong>Phase 3 — Avalanche the Rest:</strong> Once interest is zeroed, go rate-order on principals.
+                    </div>
+                    <div class="attack-order" style="margin-top:14px">
+                        <div class="meter-section-label">Your Custom Attack Order</div>
+                        <div id="hybrid-order"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="strat-tips" class="strategy-panel">
+                <div class="strategy-card tip">
+                    <div class="strategy-card-title">💡 Power Moves For Your Situation</div>
+                    <div class="strategy-card-body">
+                        <ul class="tip-list" id="tips-list"></ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bottom-nav">
+        <div class="nav-item active" id="nav-dashboard" onclick="switchTab('dashboard',this)">
+            <div class="nav-icon">📊</div><div class="nav-label">Dashboard</div>
+        </div>
+        <div class="nav-item" id="nav-payments" onclick="switchTab('payments',this)">
+            <div class="nav-icon">💰</div><div class="nav-label">Payments</div>
+        </div>
+        <div class="nav-item" id="nav-calculator" onclick="switchTab('calculator',this)">
+            <div class="nav-icon">🧮</div><div class="nav-label">Calc</div>
+        </div>
+        <div class="nav-item" id="nav-strategy" onclick="switchTab('strategy',this)">
+            <div class="nav-icon">🎯</div><div class="nav-label">Strategy</div>
+        </div>
+    </div>
+
+    <script>
+        // ── BASE DATA (as of 02/24/2026) ──
+        const BASE_DATE = new Date('2026-02-24T00:00:00');
+
+        const BASE_LOANS = [
+            { id:'AA', name:'Group AA', type:'Grad PLUS',    principal:36332.00, baseInterest:1627.53, rate:7.54, dailyAccrual:7.50,  servicer:'MOHELA', status:'active' },
+            { id:'AC', name:'Group AC', type:'Subsidized',   principal:1758.82,  baseInterest:0.00,    rate:3.76, dailyAccrual:0.18,  servicer:'MOHELA', status:'active' },
+            { id:'AE', name:'Group AE', type:'Unsubsidized', principal:25730.00, baseInterest:23.03,   rate:6.54, dailyAccrual:4.61,  servicer:'MOHELA', status:'active' },
+            { id:'AF', name:'Group AF', type:'Grad PLUS',    principal:28168.00, baseInterest:2905.19, rate:8.05, dailyAccrual:6.21,  servicer:'MOHELA', status:'active' },
+            { id:'AG', name:'Group AG', type:'Unsubsidized', principal:33000.00, baseInterest:3391.86, rate:7.05, dailyAccrual:6.37,  servicer:'MOHELA', status:'active' },
+            { id:'AH', name:'Group AH', type:'Grad PLUS',    principal:37654.46, baseInterest:476.79,  rate:9.08, dailyAccrual:9.36,  servicer:'MOHELA', status:'active' },
+            { id:'AI', name:'Group AI', type:'Unsubsidized', principal:34389.00, baseInterest:387.67,  rate:8.08, dailyAccrual:7.61,  servicer:'MOHELA', status:'active' },
+            { id:'AJ', name:'Group AJ', type:'Grad PLUS',    principal:49091.00, baseInterest:612.45,  rate:8.94, dailyAccrual:12.02, servicer:'MOHELA', status:'active' },
+            { id:'AK', name:'Group AK', type:'Unsubsidized', principal:34389.00, baseInterest:1076.51, rate:7.94, dailyAccrual:7.48,  servicer:'MOHELA', status:'active' }
+        ];
+
+        let loans    = JSON.parse(JSON.stringify(BASE_LOANS));
+        let payments = [
+            { date:'2025-06-25', amount:2000,    loanId:'CREDIT_CARD', type:'full',     description:'Credit card eliminated 🎉' },
+            { date:'2025-07-24', amount:2000,    loanId:'AA',          type:'interest', description:'Strike on Group AA interest' },
+            { date:'2025-09-02', amount:1000,    loanId:'AH',          type:'interest', description:'Attack on AH (9.08%)' },
+            { date:'2025-09-30', amount:2350,    loanId:'AF',          type:'interest', description:'Major strike on Group AF' },
+            { date:'2026-01-06', amount:3340,    loanId:'AI',          type:'interest', description:'Strike on Group AI interest' },
+            { date:'2026-01-06', amount:1171,    loanId:'AJ',          type:'interest', description:'Strike on Group AJ interest' },
+            { date:'2026-01-06', amount:815,     loanId:'AH',          type:'interest', description:'Strike on Group AH interest' },
+            { date:'2026-02-23', amount:4160.20, loanId:'AE',          type:'both',     description:'AE payoff attempt' }
+        ];
+
+        // ── LIVE INTEREST: compute days since base and add daily accrual ──
+        function getLiveLoans() {
+            const now = new Date();
+            const days = Math.max(0, (now - BASE_DATE) / 86400000);
+            return loans.map(l => {
+                if (l.status !== 'active') return { ...l };
+                return { ...l, accruedInterest: +(l.baseInterest + l.dailyAccrual * days).toFixed(2) };
+            });
+        }
+
+        function saveData() {
+            try {
+                localStorage.setItem('dd_loans_v4', JSON.stringify(loans));
+                localStorage.setItem('dd_payments_v4', JSON.stringify(payments));
+            } catch(e) {}
+        }
+        function loadData() {
+            try {
+                const sl = localStorage.getItem('dd_loans_v4');
+                const sp = localStorage.getItem('dd_payments_v4');
+                if (sl) loans    = JSON.parse(sl);
+                if (sp) payments = JSON.parse(sp);
+            } catch(e) {}
+        }
+
+        function fmt(n, d=0) {
+            return (+n).toLocaleString(undefined,{minimumFractionDigits:d,maximumFractionDigits:d});
+        }
+
+        // ── DASHBOARD ──
+        function renderDashboard() {
+            const live       = getLiveLoans();
+            const active     = live.filter(l => l.status === 'active');
+            const totalDebt  = live.reduce((s,l) => s + l.principal + l.accruedInterest, 0);
+            const totalInt   = active.reduce((s,l) => s + l.accruedInterest, 0);
+            const totalPaid  = payments.reduce((s,p) => s + p.amount, 0);
+            const dailyInt   = active.reduce((s,l) => s + l.dailyAccrual, 0);
+
+            document.getElementById('total-debt').textContent     = '$' + fmt(totalDebt,0);
+            document.getElementById('total-interest').textContent = '$' + fmt(totalInt,0);
+            document.getElementById('total-paid').textContent     = '$' + fmt(totalPaid,0);
+            document.getElementById('daily-interest').textContent = '$' + dailyInt.toFixed(2);
+
+            renderAdvice(totalDebt, totalInt, totalPaid, dailyInt);
+
+            const avalancheTarget = [...active].sort((a,b) => b.rate - a.rate)[0];
+            const sorted = [...live].sort((a,b) => {
+                if (a.status === 'eliminated' && b.status !== 'eliminated') return 1;
+                if (a.status !== 'eliminated' && b.status === 'eliminated') return -1;
+                return b.accruedInterest - a.accruedInterest;
+            });
+
+            document.getElementById('loans-list').innerHTML = sorted.map(loan => {
+                const total     = loan.principal + loan.accruedInterest;
+                const rateClass = loan.rate >= 8.5 ? 'high-rate' : loan.rate >= 6.5 ? 'medium-rate' : 'low-rate';
+                const rateBadge = loan.rate >= 8.5 ? 'high'      : loan.rate >= 6.5 ? 'medium'      : 'low';
+                const elim      = loan.status === 'eliminated' ? 'eliminated' : '';
+                const isTarget  = avalancheTarget && loan.id === avalancheTarget.id;
+                return `
+                    <div class="loan-card ${rateClass} ${elim}">
+                        <div class="loan-name">
+                            ${loan.name}
+                            <span style="color:var(--muted);font-size:12px;font-weight:500">(${loan.type})</span>
+                            <span class="rate-badge ${rateBadge}">${loan.rate}%</span>
+                            ${isTarget ? '<span class="target-badge">🎯 Target</span>' : ''}
+                            ${loan.status==='eliminated' ? '<span class="eliminated-badge">✅ Eliminated</span>' : ''}
+                        </div>
+                        <div class="loan-details">Principal: $${fmt(loan.principal,2)} &nbsp;·&nbsp; ${loan.servicer}</div>
+                        <div class="loan-details">Accrued Interest: <span style="color:var(--orange);font-weight:600">$${fmt(loan.accruedInterest,2)}</span></div>
+                        <div class="loan-balance">$${fmt(total,2)}</div>
+                        ${loan.status==='active' ? `<div class="loan-daily"><span class="live-pulse"></span>+$${loan.dailyAccrual.toFixed(2)}/day in new interest</div>` : ''}
+                    </div>`;
+            }).join('');
+
+            document.getElementById('payment-loan').innerHTML =
+                '<option value="">Select loan...</option>' +
+                loans.filter(l => l.status==='active').map(l =>
+                    `<option value="${l.id}">${l.name} (${l.type})</option>`
+                ).join('');
+        }
+
+        function renderAdvice(totalDebt, totalInt, totalPaid, dailyInt) {
+            const msgs = [
+                `Every single day you're losing $${dailyInt.toFixed(2)} to interest — that's $${fmt(dailyInt*30,0)} this month just to stand still. Attack now.`,
+                `$${fmt(totalPaid,0)} paid and counting. Your discipline is real. Group AH (9.08%) costs $9.36/day — make it the next target.`,
+                `$${fmt(totalInt,0)} in accumulated interest sitting on your loans right now. That's the first enemy to eliminate.`,
+                `Group AJ is your biggest loan at $49,091 principal and 8.94% rate — $12.02/day. It demands your attention.`,
+                `Group AC is only $1,758 total. You can wipe it out in ONE payment. Free up that mental space and redirect the momentum.`,
+                `You're a future pharmacist. Your income ceiling is high. Your debt is temporary — but only if you execute the plan.`,
+                `The Avalanche method saves you the most money. Order: AH (9.08%) → AJ (8.94%) → AI (8.08%) → AF (8.05%).`,
+                `$${fmt(totalDebt,0)} total debt. That number goes down every time you make a payment. You've already proven you can do this.`,
+                `Interest doesn't sleep. Neither does the plan. Stay on target — every extra dollar destroys future interest.`,
+                `Paying off interest before it capitalizes is critical. Once deferment ends, unpaid interest gets added to principal permanently.`
+            ];
+            document.getElementById('advice-text').textContent = msgs[Math.floor(Math.random() * msgs.length)];
+        }
+
+        // ── PAYMENTS ──
+        function renderPayments() {
+            const list = document.getElementById('payments-list');
+            if (!payments.length) {
+                list.innerHTML = '<div class="empty-state"><div class="empty-state-icon">💳</div><div class="empty-state-text">No payments logged yet</div></div>';
+                return;
+            }
+            list.innerHTML = [...payments].reverse().map(p => {
+                const loan = BASE_LOANS.find(l => l.id === p.loanId);
+                const name = loan ? `${loan.name} (${loan.type})` : p.loanId;
+                return `
+                    <div class="payment-card">
+                        <div class="payment-amount">$${fmt(p.amount,2)}</div>
+                        <div class="payment-target">${name}</div>
+                        <div class="payment-date">${p.date} &nbsp;·&nbsp; ${p.type}${p.description ? ' — '+p.description : ''}</div>
+                    </div>`;
+            }).join('');
+        }
+
+        function logPayment() {
+            const loanId = document.getElementById('payment-loan').value;
+            const amount = parseFloat(document.getElementById('payment-amount').value);
+            const type   = document.getElementById('payment-type').value;
+            if (!loanId || !amount || amount <= 0) { alert('Select a loan and enter a valid amount'); return; }
+
+            const loan = loans.find(l => l.id === loanId);
+            payments.push({ date: new Date().toISOString().split('T')[0], amount, loanId, type, description: `${type} payment` });
+
+            let rem = amount;
+            if (type === 'interest' || type === 'both') {
+                const cut = Math.min(rem, loan.baseInterest);
+                loan.baseInterest = Math.max(0, loan.baseInterest - cut);
+                rem -= cut;
+                if (loan.baseInterest === 0 && type === 'interest') alert('🎉 Interest on this loan zeroed! Now attack the principal!');
+            }
+            if (type === 'principal' || (type === 'both' && rem > 0)) {
+                loan.principal = Math.max(0, loan.principal - rem);
+            }
+            if (loan.principal <= 0 && loan.baseInterest <= 0) {
+                loan.status = 'eliminated';
+                alert("🏆 LOAN DESTROYED! You're a BEAST!");
+            }
+
+            saveData();
+            renderDashboard();
+            renderPayments();
+            document.getElementById('payment-amount').value = '';
+            alert(`✅ $${fmt(amount,2)} recorded!`);
+        }
+
+        // ── CALCULATOR ──
+        function calculatePayoff() {
+            const extra = parseFloat(document.getElementById('extra-payment').value) || 0;
+            const strat = document.getElementById('calc-strategy').value;
+            if (extra <= 0) { alert('Enter an extra payment amount'); return; }
+
+            const active = getLiveLoans().filter(l => l.status === 'active');
+            const sorted = strat === 'avalanche'
+                ? [...active].sort((a,b) => b.rate - a.rate)
+                : [...active].sort((a,b) => (a.principal+a.accruedInterest)-(b.principal+b.accruedInterest));
+
+            const minR   = simulatePayoff(active, 0);
+            const extraR = simulatePayoff(sorted, extra);
+            const mSaved = Math.max(0, minR.months - extraR.months);
+            const iSaved = Math.max(0, minR.totalInterest - extraR.totalInterest);
+            const payoffDate = new Date(Date.now() + extraR.months * 30.44 * 86400000);
+
+            document.getElementById('calc-results').innerHTML = `
+                <div class="calc-result">
+                    <h3>💪 ${strat.toUpperCase()} RESULTS</h3>
+                    <div class="calc-stat"><span class="calc-stat-label">Payoff Date</span><span class="calc-stat-value">${payoffDate.toLocaleDateString('en-US',{month:'short',year:'numeric'})}</span></div>
+                    <div class="calc-stat"><span class="calc-stat-label">Months to Freedom</span><span class="calc-stat-value">${extraR.months} mo</span></div>
+                    <div class="calc-stat"><span class="calc-stat-label">Months Saved vs Minimums</span><span class="calc-stat-value">${mSaved} mo</span></div>
+                    <div class="calc-stat"><span class="calc-stat-label">Interest Saved</span><span class="calc-stat-value">$${fmt(iSaved,0)}</span></div>
+                    <div class="progress-bar"><div class="progress-fill" style="width:${Math.min(100,Math.round(mSaved/Math.max(1,minR.months)*100))}%"></div></div>
+                    <div style="text-align:center;color:var(--green);font-size:13px;font-weight:600;">
+                        ${Math.min(100,Math.round(mSaved/Math.max(1,minR.months)*100))}% faster payoff with $${fmt(extra,0)}/month extra
+                    </div>
+                </div>`;
+        }
+
+        function simulatePayoff(loansList, extraPayment) {
+            let wl = loansList.map(l => ({ ...l, remaining: l.principal + l.accruedInterest }));
+            let months = 0, totalInterest = 0;
+            const minPerLoan   = 200;
+            const totalPayment = wl.length * minPerLoan + extraPayment;
+            while (wl.some(l => l.remaining > 0.01) && months < 480) {
+                wl.forEach(l => { if (l.remaining > 0) { const mi = l.remaining*(l.rate/100/12); l.remaining+=mi; totalInterest+=mi; } });
+                let rem = totalPayment;
+                wl.forEach(l => { if (l.remaining>0&&rem>0) { const p=Math.min(minPerLoan,l.remaining,rem); l.remaining-=p; rem-=p; } });
+                if (rem > 0) { const t = wl.find(l=>l.remaining>0); if(t){const p=Math.min(rem,t.remaining);t.remaining-=p;} }
+                months++;
+            }
+            return { months, totalInterest };
+        }
+
+        // ── STRATEGY ──
+        function renderStrategy() {
+            const live   = getLiveLoans().filter(l => l.status === 'active');
+            const maxD   = Math.max(...live.map(l => l.dailyAccrual));
+
+            // Meter
+            const byRate = [...live].sort((a,b) => b.rate - a.rate);
+            document.getElementById('avalanche-meter').innerHTML = byRate.map(l => `
+                <div class="meter-row">
+                    <div class="meter-label">${l.name}</div>
+                    <div class="meter-bar-wrap">
+                        <div class="meter-bar" style="width:${Math.round(l.dailyAccrual/maxD*100)}%;background:${l.rate>=8.5?'var(--red)':l.rate>=6.5?'var(--orange)':'var(--green)'}"></div>
+                    </div>
+                    <div class="meter-val">$${l.dailyAccrual.toFixed(2)}</div>
+                </div>`).join('');
+
+            // Avalanche order
+            document.getElementById('avalanche-order').innerHTML = byRate.map((l,i) => `
+                <div class="attack-step">
+                    <div class="step-num red">${i+1}</div>
+                    <div class="step-info">
+                        <div class="step-name">${l.name} (${l.type})</div>
+                        <div class="step-detail">
+                            <span class="hl">${l.rate}% rate</span> &nbsp;·&nbsp; Balance: $${fmt(l.principal+l.accruedInterest,0)} &nbsp;·&nbsp; $${l.dailyAccrual.toFixed(2)}/day
+                            ${i===0?' &nbsp;<strong style="color:var(--yellow)">← ATTACK NOW</strong>':''}
+                        </div>
+                    </div>
+                </div>`).join('');
+
+            // Savings
+            const noExtra = simulatePayoff(live, 0).totalInterest;
+            const with3k  = simulatePayoff(byRate, 3000).totalInterest;
+            document.getElementById('avalanche-savings').innerHTML = `
+                <div class="big">$${fmt(Math.max(0,noExtra-with3k),0)}</div>
+                <div class="label">Estimated interest saved with $3,000/mo extra vs minimums only</div>`;
+
+            // Snowball order
+            const byBal = [...live].sort((a,b) => (a.principal+a.accruedInterest)-(b.principal+b.accruedInterest));
+            document.getElementById('snowball-order').innerHTML = byBal.map((l,i) => `
+                <div class="attack-step">
+                    <div class="step-num blue">${i+1}</div>
+                    <div class="step-info">
+                        <div class="step-name">${l.name} (${l.type})</div>
+                        <div class="step-detail">
+                            Balance: <span class="hl">$${fmt(l.principal+l.accruedInterest,0)}</span> &nbsp;·&nbsp; ${l.rate}% &nbsp;·&nbsp; $${l.dailyAccrual.toFixed(2)}/day
+                            ${i===0?' &nbsp;<strong style="color:var(--yellow)">← ATTACK NOW</strong>':''}
+                        </div>
+                    </div>
+                </div>`).join('');
+
+            // Hybrid
+            const hybridPlan = [
+                { id:'AC', why:'Tiny loan — eliminate in ONE payment, instant win + freed cash flow' },
+                { id:'AH', why:'Highest rate (9.08%) — $9.36/day compounding, stop it now' },
+                { id:'AJ', why:'2nd highest rate (8.94%) + biggest principal — $12.02/day, urgent' },
+                { id:'AI', why:'3rd highest rate (8.08%) — $7.61/day' },
+                { id:'AF', why:'4th (8.05%) — $6.21/day, significant balance' },
+                { id:'AK', why:'5th (7.94%) — $7.48/day' },
+                { id:'AA', why:'6th (7.54%) — $7.50/day, large balance' },
+                { id:'AG', why:'7th (7.05%) — $6.37/day' },
+                { id:'AE', why:'Lowest rate (6.54%) — least urgent' },
+            ].map(p => ({ ...p, loan: live.find(l => l.id === p.id) })).filter(p => p.loan);
+
+            document.getElementById('hybrid-order').innerHTML = hybridPlan.map((p,i) => `
+                <div class="attack-step">
+                    <div class="step-num purple">${i+1}</div>
+                    <div class="step-info">
+                        <div class="step-name">${p.loan.name} (${p.loan.type})</div>
+                        <div class="step-detail">${p.why}${i===0?' &nbsp;<strong style="color:var(--yellow)">← DO THIS NOW</strong>':''}</div>
+                    </div>
+                </div>`).join('');
+
+            // Tips
+            const totalDaily = live.reduce((s,l) => s+l.dailyAccrual, 0);
+            const totalInt   = live.reduce((s,l) => s+l.accruedInterest, 0);
+            document.getElementById('tips-list').innerHTML = [
+                { icon:'🎯', text:`<strong>Zero your accrued interest first.</strong> You have $${fmt(totalInt,0)} sitting in accumulated interest right now. Paying it down means your future payments go straight to principal instead of first covering interest.` },
+                { icon:'💊', text:`<strong>Leverage your pharmacist salary.</strong> Pharmacists earn $120–180k+. Even an extra $500/month now dramatically shortens your payoff timeline. Every dollar you budget toward loans today buys years of future freedom.` },
+                { icon:'📅', text:`<strong>Pay more than once a month.</strong> Making bi-weekly or mid-month extra payments reduces your average daily balance — which directly cuts how much interest accrues each month.` },
+                { icon:'🏫', text:`<strong>In-school deferment trap.</strong> AE, AG, AI, AK are "IN SCHOOL" status — interest still accrues on unsubsidized loans. Any payment you make now prevents that interest from capitalizing into your principal when school ends.` },
+                { icon:'🔁', text:`<strong>Avoid capitalization at all costs.</strong> When deferment ends, all unpaid interest gets added to your principal balance — then you pay interest on the higher number forever. Attack it now.` },
+                { icon:'⚡', text:`<strong>Deploy windfalls as weapons.</strong> Tax refund, rotation bonus, gift money? Send it directly to your highest-rate loan. A $2,000 hit on AH (9.08%) saves you ~$182/year in interest immediately.` },
+                { icon:'📈', text:`<strong>Your daily interest meter: $${totalDaily.toFixed(2)}/day.</strong> That's $${fmt(totalDaily*30,0)} this month just to carry this debt. Watching this number shrink as you pay is the best motivation.` },
+                { icon:'🚫', text:`<strong>No new debt. Period.</strong> Car loan, credit card balance, anything. Every new debt slows your payoff date. Live lean during school — your future self will thank you.` },
+                { icon:'💰', text:`<strong>Group AC is your easiest win.</strong> $${fmt(live.find(l=>l.id==='AC')?.principal+live.find(l=>l.id==='AC')?.accruedInterest||0,2)} total balance. One extra payment and it's gone forever. Use that momentum.` },
+            ].map(t => `<li><span class="tip-icon">${t.icon}</span><span>${t.text}</span></li>`).join('');
+        }
+
+        // ── TAB NAVIGATION ──
+        function switchTab(tab, el) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tab+'-tab').classList.add('active');
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            if (el) el.classList.add('active');
+            if (tab === 'payments') renderPayments();
+            if (tab === 'strategy') renderStrategy();
+        }
+
+        function switchStratTab(panel, el) {
+            document.querySelectorAll('.strategy-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.strat-tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById('strat-'+panel).classList.add('active');
+            el.classList.add('active');
+        }
+
+        // ── LIVE UPDATE every 60s ──
+        setInterval(() => {
+            const activeTab = document.querySelector('.tab-content.active');
+            if (activeTab) {
+                if (activeTab.id === 'dashboard-tab') renderDashboard();
+                if (activeTab.id === 'strategy-tab')  renderStrategy();
+            }
+        }, 60000);
+
+        // ── INIT ──
+        loadData();
+        renderDashboard();
+    </script>
+</body>
+</html>
